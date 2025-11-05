@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Activity Comparison Report | MyBambu Marketing Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 4rem 2rem;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7AFF6F 0%, #00D9FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: #aaa;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header .date-badge {
+            display: inline-block;
+            background: rgba(122, 255, 111, 0.1);
+            border: 2px solid #7AFF6F;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            margin-top: 1rem;
+            color: #7AFF6F;
+            font-weight: 600;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, rgba(15, 52, 96, 0.6) 0%, rgba(22, 33, 62, 0.6) 100%);
+            border: 2px solid rgba(122, 255, 111, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #7AFF6F 0%, #00D9FF 100%);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(122, 255, 111, 0.2);
+            border-color: #7AFF6F;
+        }
+
+        .summary-card h3 {
+            font-size: 1.8rem;
+            color: #7AFF6F;
+            margin-bottom: 1rem;
+        }
+
+        .summary-card .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-card .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-card .metric-label {
+            color: #aaa;
+            font-size: 1rem;
+        }
+
+        .summary-card .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .summary-card .metric-value.activation {
+            color: #00D9FF;
+            font-size: 2rem;
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #7AFF6F 0%, #00D9FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        /* Chart Container */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .chart-card {
+            background: rgba(15, 52, 96, 0.4);
+            border: 2px solid rgba(122, 255, 111, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .chart-card h3 {
+            color: #7AFF6F;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            background: rgba(15, 52, 96, 0.4);
+            border: 2px solid rgba(122, 255, 111, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(122, 255, 111, 0.1);
+        }
+
+        th {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            color: #7AFF6F;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #7AFF6F;
+        }
+
+        td {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tr:hover {
+            background: rgba(122, 255, 111, 0.05);
+        }
+
+        .percentage {
+            color: #00D9FF;
+            font-weight: 600;
+        }
+
+        .winner {
+            background: rgba(122, 255, 111, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 700;
+            color: #7AFF6F;
+        }
+
+        /* Insights Section */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, rgba(122, 255, 111, 0.05) 0%, rgba(0, 217, 255, 0.05) 100%);
+            border: 2px solid rgba(122, 255, 111, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .insight-card::before {
+            content: '💡';
+            position: absolute;
+            top: -20px;
+            left: 2rem;
+            font-size: 2.5rem;
+            background: #1a1a2e;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .insight-card h3 {
+            color: #7AFF6F;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            margin-top: 1rem;
+        }
+
+        .insight-card p {
+            color: #ddd;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .insight-card ul {
+            margin-left: 1.5rem;
+            color: #ddd;
+        }
+
+        .insight-card li {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .insight-card strong {
+            color: #00D9FF;
+        }
+
+        /* Recommendations */
+        .recommendations {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(122, 255, 111, 0.1) 100%);
+            border: 3px solid #00D9FF;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .recommendations h2 {
+            color: #00D9FF;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .recommendation-item {
+            background: rgba(15, 52, 96, 0.6);
+            border-left: 4px solid #7AFF6F;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .recommendation-item h4 {
+            color: #7AFF6F;
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .recommendation-item p {
+            color: #ddd;
+            line-height: 1.8;
+        }
+
+        .impact-badge {
+            display: inline-block;
+            background: rgba(122, 255, 111, 0.2);
+            color: #7AFF6F;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #aaa;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .summary-grid,
+            .chart-grid,
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎯 Activity Comparison Report</h1>
+            <p>Comprehensive analysis comparing organic user activity across October 2025 and August 2025, alongside paid campaign performance</p>
+            <div class="date-badge">Generated November 2025</div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+            <!-- October Organic -->
+            <div class="summary-card">
+                <h3>📈 October 2025 Organic</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Total Users</span>
+                    <span class="metric-value">4,477</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Activated Users</span>
+                    <span class="metric-value">1,380</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Activation Rate</span>
+                    <span class="metric-value activation">30.83%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Card Activations</span>
+                    <span class="metric-value">995 (22.2%)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Cashload Users</span>
+                    <span class="metric-value">416 (9.3%)</span>
+                </div>
+            </div>
+
+            <!-- August Organic -->
+            <div class="summary-card">
+                <h3>🌱 August 2025 Organic</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Total Users</span>
+                    <span class="metric-value">3,659</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Activated Users</span>
+                    <span class="metric-value">682</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Activation Rate</span>
+                    <span class="metric-value activation">18.64%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Card Activations</span>
+                    <span class="metric-value">N/A</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Cashload Users</span>
+                    <span class="metric-value">342 (9.3%)</span>
+                </div>
+            </div>
+
+            <!-- August Paid -->
+            <div class="summary-card">
+                <h3>💰 August 2025 Paid</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Total Users</span>
+                    <span class="metric-value">20,442</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Activated Users</span>
+                    <span class="metric-value">2,698</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Activation Rate</span>
+                    <span class="metric-value activation">13.20%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Card Activations</span>
+                    <span class="metric-value">N/A</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Cashload Users</span>
+                    <span class="metric-value">1,756 (8.6%)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activation Comparison Charts -->
+        <div class="section-header">
+            <h2>Activation Rate Comparison</h2>
+            <p>Visual breakdown of user activation across all three segments</p>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>Activation Rates by Segment</h3>
+                <div class="chart-wrapper">
+                    <canvas id="activationChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Volume vs. Quality</h3>
+                <div class="chart-wrapper">
+                    <canvas id="volumeQualityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Adoption Comparison -->
+        <div class="section-header">
+            <h2>Product Adoption Analysis</h2>
+            <p>Feature engagement rates across user segments</p>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>P2P Transactions</h3>
+                <div class="chart-wrapper">
+                    <canvas id="p2pChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Crossborder & TopUp Adoption</h3>
+                <div class="chart-wrapper">
+                    <canvas id="productsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Comparison Table -->
+        <div class="section-header">
+            <h2>Detailed Metrics Comparison</h2>
+        </div>
+
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Oct 2025 Organic</th>
+                        <th>Aug 2025 Organic</th>
+                        <th>Aug 2025 Paid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Total Users</strong></td>
+                        <td>4,477</td>
+                        <td>3,659</td>
+                        <td><span class="winner">20,442</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Activation Rate</strong></td>
+                        <td><span class="winner percentage">30.83%</span></td>
+                        <td><span class="percentage">18.64%</span></td>
+                        <td><span class="percentage">13.20%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Card Activation Rate</strong></td>
+                        <td><span class="winner percentage">22.23%</span></td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cashload Rate</strong></td>
+                        <td><span class="percentage">9.29%</span></td>
+                        <td><span class="winner percentage">9.35%</span></td>
+                        <td><span class="percentage">8.59%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>P2P Send Rate</strong></td>
+                        <td><span class="percentage">5.27%</span></td>
+                        <td><span class="percentage">4.84%</span></td>
+                        <td><span class="percentage">1.92%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>P2P Request Rate</strong></td>
+                        <td><span class="percentage">1.77%</span></td>
+                        <td><span class="winner percentage">2.27%</span></td>
+                        <td><span class="percentage">0.70%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Crossborder Rate</strong></td>
+                        <td><span class="percentage">0%</span></td>
+                        <td><span class="percentage">4.45%</span></td>
+                        <td><span class="percentage">3.18%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>TopUp Rate</strong></td>
+                        <td><span class="percentage">0.98%</span></td>
+                        <td><span class="percentage">0.71%</span></td>
+                        <td><span class="percentage">0.50%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>BambuPay Adoption</strong></td>
+                        <td><span class="winner percentage">34.82%</span></td>
+                        <td><span class="percentage">32.20%</span></td>
+                        <td><span class="percentage">29.62%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Key Insights -->
+        <div class="section-header">
+            <h2>Key Insights & Analysis</h2>
+        </div>
+
+        <div class="insights-grid">
+            <div class="insight-card">
+                <h3>🏆 October Organic Leads in Quality</h3>
+                <p><strong>30.83% activation rate</strong> represents the highest quality cohort. This is a <strong>65% improvement</strong> over August Organic (18.64%) and <strong>133% better</strong> than Paid users (13.20%).</p>
+                <p>Hypothesis: The absence of paid campaigns in October may have resulted in more intentional, higher-quality organic signups from word-of-mouth and brand awareness.</p>
+            </div>
+
+            <div class="insight-card">
+                <h3>📊 Volume vs. Quality Trade-off</h3>
+                <p>Paid campaigns drive <strong>5.6x more volume</strong> than organic (20,442 vs 3,659 users in August), but at <strong>41% lower activation rate</strong>.</p>
+                <p>Cost-per-activated-user is likely much higher for paid campaigns. Organic users who activate deliver better ROI.</p>
+            </div>
+
+            <div class="insight-card">
+                <h3>💳 Card Activation Drives Success</h3>
+                <p>October Organic shows <strong>22.23% card activation</strong>, which correlates with the 30.83% overall activation rate. Card activation appears to be a strong leading indicator of user engagement.</p>
+                <p>Note: Card activation data not available in AppsFlyer (August data).</p>
+            </div>
+
+            <div class="insight-card">
+                <h3>🎯 BambuPay Shows Strong Adoption</h3>
+                <p>BambuPay engagement rates are consistently high across all segments:</p>
+                <ul>
+                    <li><strong>October Organic:</strong> 34.82%</li>
+                    <li><strong>August Organic:</strong> 32.20%</li>
+                    <li><strong>August Paid:</strong> 29.62%</li>
+                </ul>
+                <p>This indicates strong product-market fit for the BambuPay feature.</p>
+            </div>
+
+            <div class="insight-card">
+                <h3>💸 Funding Consistency</h3>
+                <p>Cashload rates are remarkably consistent across all segments (8.6-9.4%), suggesting funding behavior is independent of acquisition channel.</p>
+                <p>This baseline ~9% funding rate represents users with strong intent to use the platform.</p>
+            </div>
+
+            <div class="insight-card">
+                <h3>🌍 Crossborder Opportunity</h3>
+                <p>Crossborder transactions show <strong>0% adoption in October Organic</strong> (likely a data tracking issue) but decent rates in August:</p>
+                <ul>
+                    <li><strong>August Organic:</strong> 4.45%</li>
+                    <li><strong>August Paid:</strong> 3.18%</li>
+                </ul>
+                <p>This feature has room for growth with better in-app promotion.</p>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="recommendations">
+            <h2>🚀 Strategic Recommendations</h2>
+
+            <div class="recommendation-item">
+                <h4>1. Focus on Organic Channel Quality</h4>
+                <p>October Organic's 30.83% activation rate proves that organic channels can deliver superior quality. Invest in organic growth strategies: content marketing, referral programs, community building, and brand partnerships. These channels deliver 2.3x better activation rates than paid ads.</p>
+                <span class="impact-badge">High Impact • Low Cost</span>
+            </div>
+
+            <div class="recommendation-item">
+                <h4>2. Optimize Paid Campaign Targeting</h4>
+                <p>Paid campaigns deliver volume but poor quality (13.20% activation). Refine audience targeting to attract users more similar to organic cohorts. Consider:</p>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem; color: #ddd;">
+                    <li>Lookalike audiences based on activated organic users</li>
+                    <li>Interest-based targeting focused on financial empowerment, remittances, and Latino community</li>
+                    <li>Exclude users with low engagement signals</li>
+                </ul>
+                <span class="impact-badge">High Impact • Medium Cost</span>
+            </div>
+
+            <div class="recommendation-item">
+                <h4>3. Prioritize Card Activation in Onboarding</h4>
+                <p>October's 22.23% card activation correlates strongly with 30.83% overall activation. Push card ordering and activation earlier in the user journey. Consider incentives for first-time card orders.</p>
+                <span class="impact-badge">Medium Impact • Low Cost</span>
+            </div>
+
+            <div class="recommendation-item">
+                <h4>4. Expand BambuPay Promotion</h4>
+                <p>BambuPay shows strong adoption (30-35%) across all segments. This is your strongest feature. Promote it heavily in onboarding and encourage first transactions with bonuses or reduced fees.</p>
+                <span class="impact-badge">Medium Impact • Low Cost</span>
+            </div>
+
+            <div class="recommendation-item">
+                <h4>5. Investigate Activation Gap for Paid Users</h4>
+                <p>With only 13.20% activation, paid users are churning before finding value. Implement specialized onboarding flows for paid acquisition cohorts with more aggressive engagement nudges in the first 48 hours.</p>
+                <span class="impact-badge">High Impact • Medium Cost</span>
+            </div>
+
+            <div class="recommendation-item">
+                <h4>6. Test Hybrid Acquisition Strategy</h4>
+                <p>Consider running small-scale paid campaigns focused on brand awareness rather than direct acquisition. This may create a "halo effect" that improves organic quality—as potentially seen in August organic performance when paid ads were running.</p>
+                <span class="impact-badge">Experimental • Medium Cost</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Data Sources:</strong> MYBAMBU_PROD.BAMBU_MART_SINGULAR.MART_EVENTS (October 2025 Organic) | MYBAMBU_PROD.BAMBU_INT_APPSFLYER.INT_AF_EVENT (August 2025)</p>
+            <p style="margin-top: 1rem;">MyBambu Marketing Analytics Team | Generated November 2025</p>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js configuration
+        const chartColors = {
+            octOrganic: '#7AFF6F',
+            augOrganic: '#00D9FF',
+            augPaid: '#FF6B9D',
+            background: 'rgba(122, 255, 111, 0.1)',
+            grid: 'rgba(255, 255, 255, 0.1)'
+        };
+
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#fff',
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: chartColors.grid
+                    },
+                    ticks: {
+                        color: '#aaa'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: chartColors.grid
+                    },
+                    ticks: {
+                        color: '#aaa'
+                    }
+                }
+            }
+        };
+
+        // Activation Rate Chart
+        const activationCtx = document.getElementById('activationChart').getContext('2d');
+        new Chart(activationCtx, {
+            type: 'bar',
+            data: {
+                labels: ['October Organic', 'August Organic', 'August Paid'],
+                datasets: [{
+                    label: 'Activation Rate (%)',
+                    data: [30.83, 18.64, 13.20],
+                    backgroundColor: [chartColors.octOrganic, chartColors.augOrganic, chartColors.augPaid],
+                    borderRadius: 10,
+                    borderWidth: 2,
+                    borderColor: 'rgba(255, 255, 255, 0.3)'
+                }]
+            },
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    title: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Volume vs Quality Scatter
+        const volumeCtx = document.getElementById('volumeQualityChart').getContext('2d');
+        new Chart(volumeCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'October Organic',
+                    data: [{x: 4477, y: 30.83}],
+                    backgroundColor: chartColors.octOrganic,
+                    borderColor: chartColors.octOrganic,
+                    pointRadius: 12,
+                    pointHoverRadius: 15
+                }, {
+                    label: 'August Organic',
+                    data: [{x: 3659, y: 18.64}],
+                    backgroundColor: chartColors.augOrganic,
+                    borderColor: chartColors.augOrganic,
+                    pointRadius: 12,
+                    pointHoverRadius: 15
+                }, {
+                    label: 'August Paid',
+                    data: [{x: 20442, y: 13.20}],
+                    backgroundColor: chartColors.augPaid,
+                    borderColor: chartColors.augPaid,
+                    pointRadius: 12,
+                    pointHoverRadius: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#fff',
+                            font: { size: 14 }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Total Users',
+                            color: '#7AFF6F',
+                            font: { size: 14 }
+                        },
+                        grid: { color: chartColors.grid },
+                        ticks: { color: '#aaa' }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Activation Rate (%)',
+                            color: '#7AFF6F',
+                            font: { size: 14 }
+                        },
+                        grid: { color: chartColors.grid },
+                        ticks: { color: '#aaa' }
+                    }
+                }
+            }
+        });
+
+        // P2P Chart
+        const p2pCtx = document.getElementById('p2pChart').getContext('2d');
+        new Chart(p2pCtx, {
+            type: 'bar',
+            data: {
+                labels: ['P2P Send', 'P2P Request'],
+                datasets: [{
+                    label: 'Oct Organic',
+                    data: [5.27, 1.77],
+                    backgroundColor: chartColors.octOrganic,
+                    borderRadius: 8
+                }, {
+                    label: 'Aug Organic',
+                    data: [4.84, 2.27],
+                    backgroundColor: chartColors.augOrganic,
+                    borderRadius: 8
+                }, {
+                    label: 'Aug Paid',
+                    data: [1.92, 0.70],
+                    backgroundColor: chartColors.augPaid,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#fff',
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Products Chart
+        const productsCtx = document.getElementById('productsChart').getContext('2d');
+        new Chart(productsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Crossborder', 'TopUp'],
+                datasets: [{
+                    label: 'Oct Organic',
+                    data: [0, 0.98],
+                    backgroundColor: chartColors.octOrganic,
+                    borderRadius: 8
+                }, {
+                    label: 'Aug Organic',
+                    data: [4.45, 0.71],
+                    backgroundColor: chartColors.augOrganic,
+                    borderRadius: 8
+                }, {
+                    label: 'Aug Paid',
+                    data: [3.18, 0.50],
+                    backgroundColor: chartColors.augPaid,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#fff',
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
