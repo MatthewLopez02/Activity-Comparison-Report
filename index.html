@@ -492,8 +492,8 @@
 
         <!-- Activation Funnel Analysis -->
         <div class="section-header">
-            <h2>Activation Funnel & Drop-off Analysis</h2>
-            <p>Journey from signup to first transaction - identifying where users drop off</p>
+            <h2>Product Adoption Funnel</h2>
+            <p>User engagement by product type - from card activation to advanced features</p>
         </div>
 
         <div class="chart-grid">
@@ -503,7 +503,7 @@
                     <canvas id="funnelPaidChart"></canvas>
                 </div>
                 <div style="margin-top: 1rem; color: #ddd; font-size: 0.9rem; line-height: 1.6;">
-                    <strong style="color: #FF6B9D;">Critical Drop-off:</strong> 88% activate cards but only 21% transact (67% drop-off)
+                    <strong style="color: #FF6B9D;">Product Adoption:</strong> Cards (88%) → Cashload (8.7%) → P2P (2.0%) → Crossborder (1.6%)
                 </div>
             </div>
 
@@ -513,7 +513,7 @@
                     <canvas id="funnelOrganicChart"></canvas>
                 </div>
                 <div style="margin-top: 1rem; color: #ddd; font-size: 0.9rem; line-height: 1.6;">
-                    <strong style="color: #00D9FF;">Better conversion:</strong> 79% activate cards, 31% transact (48% drop-off)
+                    <strong style="color: #00D9FF;">Product Adoption:</strong> Cards (79%) → Cashload (8.9%) → P2P (4.9%) → Crossborder (1.8%)
                 </div>
             </div>
         </div>
@@ -1065,11 +1065,11 @@
         new Chart(funnelPaidCtx, {
             type: 'bar',
             data: {
-                labels: ['Users Created', 'Matched to Account', 'Card Activated', 'First Transaction'],
+                labels: ['Total Users', 'Card Activated', 'Cashload', 'P2P Transactions', 'Crossborder'],
                 datasets: [{
                     label: 'Users',
-                    data: [21701, 20441, 19200, 4471],
-                    backgroundColor: [chartColors.augPaid, chartColors.augPaid, chartColors.augPaid, chartColors.augPaid],
+                    data: [21701, 19200, 1883, 429, 339],
+                    backgroundColor: [chartColors.augPaid, chartColors.augPaid, chartColors.augPaid, chartColors.augPaid, chartColors.augPaid],
                     borderRadius: 8
                 }]
             },
@@ -1110,11 +1110,11 @@
         new Chart(funnelOrganicCtx, {
             type: 'bar',
             data: {
-                labels: ['Users Created', 'Matched to Account', 'Card Activated', 'First Transaction'],
+                labels: ['Total Users', 'Card Activated', 'Cashload', 'P2P Transactions', 'Crossborder'],
                 datasets: [{
                     label: 'Users',
-                    data: [4141, 3658, 3264, 1266],
-                    backgroundColor: [chartColors.augOrganic, chartColors.augOrganic, chartColors.augOrganic, chartColors.augOrganic],
+                    data: [4141, 3264, 370, 201, 74],
+                    backgroundColor: [chartColors.augOrganic, chartColors.augOrganic, chartColors.augOrganic, chartColors.augOrganic, chartColors.augOrganic],
                     borderRadius: 8
                 }]
             },
