@@ -390,6 +390,10 @@
                     <span class="metric-label">P2P Send</span>
                     <span class="metric-value">203 (1.9%)</span>
                 </div>
+                <div class="metric-row">
+                    <span class="metric-label">Direct Deposit (ACH)</span>
+                    <span class="metric-value">124 (1.1%)</span>
+                </div>
             </div>
 
             <!-- August Organic -->
@@ -415,6 +419,10 @@
                     <span class="metric-label">P2P Send</span>
                     <span class="metric-value">354 (8.6%)</span>
                 </div>
+                <div class="metric-row">
+                    <span class="metric-label">Direct Deposit (ACH)</span>
+                    <span class="metric-value">196 (4.7%)</span>
+                </div>
             </div>
 
             <!-- August Paid -->
@@ -439,6 +447,10 @@
                 <div class="metric-row">
                     <span class="metric-label">P2P Send</span>
                     <span class="metric-value">822 (3.4%)</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Direct Deposit (ACH)</span>
+                    <span class="metric-value">837 (3.9%)</span>
                 </div>
             </div>
         </div>
@@ -483,6 +495,21 @@
                 <h3>Revenue Events Adoption</h3>
                 <div class="chart-wrapper">
                     <canvas id="productsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Direct Deposit Section -->
+        <div class="section-header">
+            <h2>Direct Deposit (ACH) Analysis</h2>
+            <p>Financial commitment indicator across user segments</p>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>Direct Deposit Adoption Rates</h3>
+                <div class="chart-wrapper">
+                    <canvas id="achChart"></canvas>
                 </div>
             </div>
         </div>
@@ -551,6 +578,12 @@
                         <td><span class="winner percentage">0.05%</span></td>
                         <td><span class="percentage">0.05%</span></td>
                     </tr>
+                    <tr>
+                        <td><strong>Direct Deposit (ACH) Rate</strong></td>
+                        <td><span class="percentage">1.13%</span></td>
+                        <td><span class="winner percentage">4.73%</span></td>
+                        <td><span class="percentage">3.86%</span></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -606,6 +639,17 @@
                 <p>Crossborder and Ding Voucher adoption rates are relatively consistent between August Organic and Paid users, showing that both channels drive similar product engagement patterns once users activate.</p>
                 <p>October users show lower adoption (0.02%-0.05%), suggesting these features require longer user tenure before adoption.</p>
             </div>
+
+            <div class="insight-card">
+                <h3>Direct Deposit Shows Strongest Commitment in August Organic</h3>
+                <p><strong>August Organic leads in direct deposit adoption</strong> with 4.73% of users setting up ACH, demonstrating the highest level of financial commitment across all segments.</p>
+                <ul>
+                    <li><strong>August Organic:</strong> 4.73% (196 users)</li>
+                    <li><strong>August Paid:</strong> 3.86% (837 users)</li>
+                    <li><strong>October Organic:</strong> 1.13% (124 users)</li>
+                </ul>
+                <p>Direct deposit is a critical indicator of deep user engagement and long-term retention. August segments show 3-4x higher ACH adoption than October, suggesting users need time to establish this level of financial trust and commitment.</p>
+            </div>
         </div>
 
         <!-- Recommendations -->
@@ -646,6 +690,12 @@
                 <h4>6. Develop Channel-Specific Lifecycle Campaigns</h4>
                 <p>Different channels show different usage patterns. Create tailored lifecycle campaigns for paid vs organic users, promoting features based on natural adoption curves. Focus on Crossborder and Cashload for users after 30-60 days of tenure.</p>
                 <span class="impact-badge">Medium Impact • Medium Cost</span>
+            </div>
+
+            <div class="recommendation-item">
+                <h4>7. Drive Direct Deposit Adoption to Increase Retention</h4>
+                <p>August Organic users lead in direct deposit adoption (4.73%), showing the highest financial commitment. Direct deposit users represent the most valuable, sticky customer segment. Create targeted campaigns to drive ACH setup within 60-90 days of account creation, with incentives like fee waivers or cash bonuses for first direct deposit.</p>
+                <span class="impact-badge">High Impact • Medium Cost</span>
             </div>
         </div>
 
@@ -861,6 +911,32 @@
                             color: '#fff',
                             font: { size: 12 }
                         }
+                    }
+                }
+            }
+        });
+
+        // ACH Direct Deposit Chart
+        const achCtx = document.getElementById('achChart').getContext('2d');
+        new Chart(achCtx, {
+            type: 'bar',
+            data: {
+                labels: ['October Organic', 'August Organic', 'August Paid'],
+                datasets: [{
+                    label: 'Direct Deposit (ACH) Rate (%)',
+                    data: [1.13, 4.73, 3.86],
+                    backgroundColor: [chartColors.octOrganic, chartColors.augOrganic, chartColors.augPaid],
+                    borderRadius: 10,
+                    borderWidth: 2,
+                    borderColor: 'rgba(255, 255, 255, 0.3)'
+                }]
+            },
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    title: {
+                        display: false
                     }
                 }
             }
