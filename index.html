@@ -498,12 +498,12 @@
 
         <div class="chart-grid">
             <div class="chart-card">
-                <h3>August 2025 Paid Ads Funnel</h3>
+                <h3>October 2025 Organic Funnel</h3>
                 <div class="chart-wrapper">
-                    <canvas id="funnelPaidChart"></canvas>
+                    <canvas id="funnelOctoberChart"></canvas>
                 </div>
                 <div style="margin-top: 1rem; color: #ddd; font-size: 0.9rem; line-height: 1.6;">
-                    <strong style="color: #FF6B9D;">Product Adoption:</strong> Cards (88%) → Cashload (8.7%) → P2P (2.0%) → Crossborder (1.6%)
+                    <strong style="color: #7AFF6F;">Product Adoption:</strong> Cards (38.6%) → Cashload (9.4%) → P2P (4.8%) → Crossborder (4.2%)
                 </div>
             </div>
 
@@ -514,6 +514,16 @@
                 </div>
                 <div style="margin-top: 1rem; color: #ddd; font-size: 0.9rem; line-height: 1.6;">
                     <strong style="color: #00D9FF;">Product Adoption:</strong> Cards (79%) → Cashload (8.9%) → P2P (4.9%) → Crossborder (1.8%)
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>August 2025 Paid Ads Funnel</h3>
+                <div class="chart-wrapper">
+                    <canvas id="funnelPaidChart"></canvas>
+                </div>
+                <div style="margin-top: 1rem; color: #ddd; font-size: 0.9rem; line-height: 1.6;">
+                    <strong style="color: #FF6B9D;">Product Adoption:</strong> Cards (88%) → Cashload (8.7%) → P2P (2.0%) → Crossborder (1.6%)
                 </div>
             </div>
         </div>
@@ -1055,6 +1065,51 @@
                     ...chartOptions.plugins,
                     title: {
                         display: false
+                    }
+                }
+            }
+        });
+
+        // Funnel Chart - October Organic
+        const funnelOctoberCtx = document.getElementById('funnelOctoberChart').getContext('2d');
+        new Chart(funnelOctoberCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Total Users', 'Card Activated', 'Cashload', 'P2P Transactions', 'Crossborder'],
+                datasets: [{
+                    label: 'Users',
+                    data: [10949, 4227, 1034, 529, 459],
+                    backgroundColor: [chartColors.octOrganic, chartColors.octOrganic, chartColors.octOrganic, chartColors.octOrganic, chartColors.octOrganic],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = 10949;
+                                const pct = ((context.parsed.x / total) * 100).toFixed(1);
+                                return context.parsed.x.toLocaleString() + ' users (' + pct + '%)';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: chartColors.grid },
+                        ticks: { color: '#aaa' }
+                    },
+                    y: {
+                        grid: { color: chartColors.grid },
+                        ticks: { color: '#aaa' }
                     }
                 }
             }
