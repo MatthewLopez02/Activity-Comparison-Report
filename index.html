@@ -463,21 +463,6 @@
             </div>
         </div>
 
-        <!-- Direct Deposit Section -->
-        <div class="section-header">
-            <h2>Direct Deposit (ACH) Analysis</h2>
-            <p>Financial commitment indicator across user segments</p>
-        </div>
-
-        <div class="chart-grid">
-            <div class="chart-card">
-                <h3>Direct Deposit Adoption Rates</h3>
-                <div class="chart-wrapper">
-                    <canvas id="achChart"></canvas>
-                </div>
-            </div>
-        </div>
-
         <!-- Activation Funnel Analysis -->
         <div class="section-header">
             <h2>Product Adoption Funnel</h2>
@@ -560,6 +545,75 @@
                 <li><strong>October's 79% activation is still strong</strong> despite users having only ~1 month vs August's 3+ months</li>
                 <li><strong>Note:</strong> This data comes from Salesforce (MART_ACCOUNT → MART_CARD_GALILEO) and does not include media source attribution</li>
             </ul>
+        </div>
+
+        <!-- Bambu Pay Analysis -->
+        <div class="section-header">
+            <h2>Bambu Pay Adoption: August vs October 2025</h2>
+            <p>Peer-to-peer payment feature usage across all users (no media source segmentation)</p>
+        </div>
+
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Unique Users</th>
+                        <th>Total Transactions</th>
+                        <th>Transaction Volume</th>
+                        <th>Avg Transaction Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>August 2025</strong></td>
+                        <td>8,504</td>
+                        <td>29,955</td>
+                        <td>$3.51M</td>
+                        <td>$117.30</td>
+                    </tr>
+                    <tr>
+                        <td><strong>September 2025</strong></td>
+                        <td>10,896</td>
+                        <td>37,592</td>
+                        <td>$4.15M</td>
+                        <td>$110.46</td>
+                    </tr>
+                    <tr>
+                        <td><strong>October 2025</strong></td>
+                        <td><span class="winner">9,372</span></td>
+                        <td><span class="winner">40,437</span></td>
+                        <td><span class="winner">$4.79M</span></td>
+                        <td>$118.47</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="insight-card" style="margin-top: 2rem;">
+            <h3>Bambu Pay Insights</h3>
+            <ul>
+                <li><strong>Growing adoption:</strong> October had 10% more users than August (9,372 vs 8,504)</li>
+                <li><strong>Transaction volume peaked in October:</strong> $4.79M across 40,437 transactions</li>
+                <li><strong>September saw highest unique user count:</strong> 10,896 users - 28% more than August</li>
+                <li><strong>Consistent transaction sizes:</strong> Average transaction ranges from $110-$118 across all months</li>
+                <li><strong>Note:</strong> Bambu Pay transactions identified as Visa Money Transfer with ASTRA*MyBambu merchant description. Data cannot be segmented by media source due to system limitations</li>
+            </ul>
+        </div>
+
+        <!-- Direct Deposit Section -->
+        <div class="section-header">
+            <h2>Direct Deposit (ACH) Analysis</h2>
+            <p>Financial commitment indicator across user segments</p>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>Direct Deposit Adoption Rates</h3>
+                <div class="chart-wrapper">
+                    <canvas id="achChart"></canvas>
+                </div>
+            </div>
         </div>
 
         <!-- Time to Activation -->
